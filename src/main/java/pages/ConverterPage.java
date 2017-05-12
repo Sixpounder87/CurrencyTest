@@ -21,6 +21,14 @@ public final class ConverterPage {
 			.xpath(".//*[text()='Хочу приобрести']/..//div[text()='RUR']");
 	private static final By WISH_INPUT_LOCATOR = By
 			.xpath(".//*[text()='Хочу приобрести']/..//input[@type]");
+	private static final By DATE_LOCATOR = By
+			.cssSelector("input[placeholder='Дата']");
+	private static final By CUSTOM_SELECT_LOCATOR = By
+			.cssSelector("div.custom_select");
+	private static final By CB_RF_LOCATOR = By.xpath("//div[text()='ЦБ РФ']");
+	private static final By FOREX_LOCATOR = By.xpath("//div[text()='Forex']");
+	private static final By EXCHANGE_LOCATOR = By
+			.xpath("//div[text()='Пункты обмена']");
 
 	private static final String URL_MATCH = "https://cash.rbc.ru/";
 
@@ -57,7 +65,7 @@ public final class ConverterPage {
 			// wait for conversion operation is completed and all transitional
 			// results disappear from input field. This sleep is the only way
 			// since proposal waiting for AJAX is completed doesn't work
-			TimeUtil.sleepTimeoutMillis(200);
+			TimeUtil.sleepTimeoutMillis(500);
 			newInputValue = inputField.getAttribute("value");
 		}
 		return inputValue;
@@ -91,5 +99,30 @@ public final class ConverterPage {
 	@Step("Взять значение из графы \"хочу приобрести\"")
 	public String getWishInput() {
 		return getInputValue(WISH_INPUT_LOCATOR);
+	}
+
+	@Step("Установить дату {0}")
+	public void setDate(String date) {
+		setInputValue(DATE_LOCATOR, date);
+	}
+
+	@Step("Установить курс ЦБ РФ")
+	public void setСbRf() {
+		setCurrencyType(CB_RF_LOCATOR);
+	}
+
+	@Step("Установить курс Forex")
+	public void setForex() {
+		setCurrencyType(FOREX_LOCATOR);
+	}
+
+	@Step("Установить курс пунктов обмена")
+	public void setExchange() {
+		setCurrencyType(EXCHANGE_LOCATOR);
+	}
+
+	private void setCurrencyType(By locator) {
+		driver.findElement(CUSTOM_SELECT_LOCATOR).click();
+		driver.findElement(locator).click();
 	}
 }
