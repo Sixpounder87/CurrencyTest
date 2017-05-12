@@ -57,7 +57,7 @@ public final class ConverterPage {
 			// wait for conversion operation is completed and all transitional
 			// results disappear from input field. This sleep is the only way
 			// since proposal waiting for AJAX is completed doesn't work
-			TimeUtil.sleepTimeoutMillis(500);
+			TimeUtil.sleepTimeoutMillis(200);
 			newInputValue = inputField.getAttribute("value");
 		}
 		return inputValue;
