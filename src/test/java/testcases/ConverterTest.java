@@ -1,14 +1,13 @@
 package testcases;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import pages.ConverterPage;
@@ -39,7 +38,18 @@ public final class ConverterTest {
 		}
 	}
 
-	@Title("Тест 02")
+	@Title("Тест 01. Проверка ввода некорректных данных.")
+	@Test(dataProvider = "inputData")
+	public void test01(String inputData) {
+		final ConverterPage homePage = new ConverterPage(driver);
+		homePage.setMyInput(inputData);
+		assertEquals(homePage.getMyInput(), "",
+				"Не удаляются данные, не подходящие под формат");
+		assertEquals(homePage.getWishInput(), "Нет данных",
+				"Не найдено сообщение \"Нет данных\"");
+	}
+
+	@Title("Тест 02. Проверка совпадения прямой и обратной конвертации.")
 	@Test
 	public void test02() {
 		final ConverterPage homePage = new ConverterPage(driver);
@@ -56,7 +66,7 @@ public final class ConverterTest {
 				"обратная конвертация курса не совпадает с прямой");
 	}
 
-	@Title("Тест 07")
+	@Title("Тест 07. Проверка конвертации по курсам разных банков/обменников.")
 	@Test
 	public void test07() {
 		final ConverterPage homePage = new ConverterPage(driver);
@@ -66,11 +76,11 @@ public final class ConverterTest {
 		homePage.setMyInput("5000.1");
 		homePage.setСbRf();
 		Float currencyValue = Float.parseFloat(homePage.getWishInput());
-		assertTrue(currencyValue > 87.5 && currencyValue < 88,
+		assertTrue(currencyValue > 87 && currencyValue < 88,
 				"неправильная конвертация курса");
 		homePage.setForex();
 		currencyValue = Float.parseFloat(homePage.getWishInput());
-		assertTrue(currencyValue > 87.5 && currencyValue < 88,
+		assertTrue(currencyValue > 87 && currencyValue < 88,
 				"неправильная конвертация курса");
 		homePage.setExchange();
 		currencyValue = Float.parseFloat(homePage.getWishInput());
@@ -81,5 +91,20 @@ public final class ConverterTest {
 	@AfterClass
 	public void postconditions() {
 		driver.quit();
+	}
+
+	@DataProvider
+	private String[][] inputData() {
+		return new String[][] { { "-" }, { "&^%#" }, { "cfdf" }, { " " } };
+	}
+	
+	@Step("Проверка совпадения данных в поле ввода/вывода со значением {1}")
+	private void assertEquals(String firstValue, String secondValue, String errorMessage) {
+		Assert.assertEquals(firstValue, secondValue, errorMessage);
+	}
+
+	@Step("Проверка выполнения условия данных в поле ввода/вывода")
+	private void assertTrue(boolean value, String errorMessage) {
+		Assert.assertTrue(value, errorMessage);
 	}
 }

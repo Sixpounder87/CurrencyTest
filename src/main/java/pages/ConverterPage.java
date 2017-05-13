@@ -101,6 +101,11 @@ public final class ConverterPage {
 		return getInputValue(WISH_INPUT_LOCATOR);
 	}
 
+	@Step("Взять значение из графы \"у меня есть\"")
+	public String getMyInput() {
+		return getInputValue(MY_INPUT_LOCATOR);
+	}
+
 	@Step("Установить дату {0}")
 	public void setDate(String date) {
 		setInputValue(DATE_LOCATOR, date);
